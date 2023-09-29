@@ -37,7 +37,7 @@ fun GomokuView(model: GomokuModel, modifier: Modifier) {
 }
 
 fun play(model: GomokuModel, x: Int, y: Int): Boolean {
-    return model.play(x,y)
+    return model.play(x,y);
 }
 
 @Composable
