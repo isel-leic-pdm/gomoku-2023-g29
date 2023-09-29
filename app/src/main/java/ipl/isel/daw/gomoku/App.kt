@@ -1,7 +1,6 @@
 package ipl.isel.daw.gomoku
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.paddingFrom
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,9 +26,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.FirstBaseline
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -38,6 +36,7 @@ import androidx.compose.ui.unit.sp
 const val TRADITIONAL = 1
 const val EXPANDED = 0
 const val UNALTERED = -1
+
 @Preview(showSystemUi = true)
 @Composable
 fun App() {
@@ -48,7 +47,7 @@ fun App() {
         val connectionType = rememberSaveable { mutableIntStateOf(UNALTERED) }
 
         if (isTraditional.intValue != UNALTERED) {
-            if(connectionType.intValue != UNALTERED)
+            if (connectionType.intValue != UNALTERED)
                 GenerateBoard(isTraditional.intValue)
             else
                 ChoosePlayType(connectionType)
@@ -83,7 +82,6 @@ fun Menu() =
     }
 
 
-
 @Composable
 fun ChoosePlayType(connectionType: MutableIntState) =
     Column(
@@ -94,7 +92,9 @@ fun ChoosePlayType(connectionType: MutableIntState) =
         Text(text = "GOMOKU", fontSize = 30.sp)
         Text(text = "Choose Connection Type: ", fontSize = 15.sp)
         Row {
-            TextButton(onClick = { connectionType.intValue = TRADITIONAL }) {            // "Traditional" to spare "resources" (replication of values
+            TextButton(onClick = {
+                connectionType.intValue = TRADITIONAL
+            }) {            // "Traditional" to spare "resources" (replication of values
                 Text(text = "Same Device")
             }
             TextButton(onClick = { connectionType.intValue = EXPANDED }) {
@@ -124,17 +124,24 @@ fun ChooseGameType(gamemode: MutableIntState) =
 
 @Composable
 fun GenerateBoard(isTraditional: Int) {
+    val model = remember(GomokuModel(if(isTraditional == TRADITIONAL) 15 else 19))
+    GomokuView(model = model, modifier = Modifier)
+
+    /*
     val config = LocalConfiguration.current
     val height = config.screenHeightDp
     val width = config.screenWidthDp
-
 
     val boardSize = if (isTraditional == TRADITIONAL) 15 else 19
     val widthBox = width / boardSize
     val heightBox = height / boardSize
     val size = remember(if (widthBox < heightBox) widthBox else heightBox)
 
-    BuildGrid(boardSize, size.dp)
+
+     */
+
+
+    //BuildGrid(boardSize, size.dp)
     /*
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -155,7 +162,7 @@ fun GenerateBoard(isTraditional: Int) {
 
 @Composable
 private fun BuildGrid(boardSize: Int, size: Dp) {
-    /** List with [remembered] cell positions**/
+    /** Table of Grid with remembered cell positions**/
     val placements = mutableListOf<MutableList<MutableState<Boolean>>>()
 
     Column {
@@ -181,17 +188,20 @@ private fun MakeCell(
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
+            .requiredSize(size)
             .size(size)
-            .border(
-                width = 1.dp,
-                color = Color(0xFF5F5FFF)
-            )
+            //.border(width = 2.dp,color = MaterialTheme.colorScheme.error)
             .noRippleClickable(onClick = { placements[j][i].value = true })
     ) {
         if (placements[j][i].value)
             Image(
                 painter = painterResource(id = R.drawable.sonic_piece),
                 contentDescription = "sonic_piece"
+            )
+        else
+            Image(
+                painter = painterResource(id = R.drawable.grid),
+                contentDescription = "grid"
             )
     }
 }
