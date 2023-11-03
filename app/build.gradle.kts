@@ -59,7 +59,7 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3:1.1.2")
-    implementation("androidx.compose.foundation:foundation-android:1.5.1")
+    implementation("androidx.compose.foundation:foundation-android:1.5.2")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("io.mockk:mockk-android:1.13.8")
     androidTestImplementation("io.mockk:mockk-agent:1.13.8")
@@ -68,5 +68,5 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2023.09.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.1")
+    debugImplementation("androidx.compose.ui:ui-test-manifest:1.5.2")
 }
