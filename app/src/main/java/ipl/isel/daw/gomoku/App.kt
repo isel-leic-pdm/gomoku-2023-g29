@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.paddingFrom
 import androidx.compose.foundation.layout.requiredSize
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -124,7 +123,11 @@ fun ChooseGameType(gamemode: MutableIntState) =
 
 @Composable
 fun GenerateBoard(isTraditional: Int) {
-    val model = remember(GomokuModel(if(isTraditional == TRADITIONAL) 15 else 19))
+    val model = remember (
+        GomokuModel(
+            if(isTraditional == TRADITIONAL) 15
+            else 19)
+    )
     GomokuView(model = model, modifier = Modifier)
 
     /*
@@ -137,11 +140,8 @@ fun GenerateBoard(isTraditional: Int) {
     val heightBox = height / boardSize
     val size = remember(if (widthBox < heightBox) widthBox else heightBox)
 
-
+    BuildGrid(boardSize, size.dp)
      */
-
-
-    //BuildGrid(boardSize, size.dp)
     /*
         Row(
             horizontalArrangement = Arrangement.Center,
@@ -189,9 +189,11 @@ private fun MakeCell(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .requiredSize(size)
-            .size(size)
+            //.size(size)
             //.border(width = 2.dp,color = MaterialTheme.colorScheme.error)
-            .noRippleClickable(onClick = { placements[j][i].value = true })
+            .noRippleClickable(
+                onClick = { placements[j][i].value = true }, enabled = true
+            )
     ) {
         if (placements[j][i].value)
             Image(
@@ -208,11 +210,11 @@ private fun MakeCell(
 
 
 /** Utility functions */
-fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
+fun Modifier.noRippleClickable(onClick: () -> Unit, enabled: Boolean): Modifier = composed {
     clickable(indication = null,
-        interactionSource = remember { MutableInteractionSource() }) {
-        onClick()
-    }
+        interactionSource = remember { MutableInteractionSource() },
+        enabled = enabled
+    ) { onClick() }
 }
 
 @Composable

@@ -1,29 +1,22 @@
 package ipl.isel.daw.gomoku
 
+import androidx.compose.runtime.mutableIntStateOf
+
 data class GomokuModel(val boardSize : Int) {
 
-    val board = MutableList(boardSize) { MutableList(boardSize) { 0 } }
+    val board = MutableList(boardSize) { MutableList(boardSize) { mutableIntStateOf(0) } }
     private var turn = 1
     private var winner = 0
     private var isFinished = false
 
-
-    fun getTurn() : Int {
-        return turn
-    }
-
-    fun getWinner() : Int {
-        return winner
-    }
-
-    fun isFinished() : Boolean {
-        return isFinished
-    }
+    fun getTurn() : Int = turn
+    fun getWinner() : Int = winner
+    fun isFinished() : Boolean = isFinished
 
     fun play(x : Int, y : Int) : Boolean {
-        if (board[x][y] != 0 || isFinished) return false
-        board[x][y] = turn
-        if (checkWin(x, y)) {
+        if (board[x][y].intValue != 0 || isFinished) return false
+        board[x][y].intValue = turn
+        if (checkWin(x, y,getTurn())) {
             winner = turn
             isFinished = true
         }
@@ -31,73 +24,25 @@ data class GomokuModel(val boardSize : Int) {
         return true
     }
 
-    private fun checkWin(x: Int, y: Int): Boolean {
-        return checkHorizontal(x, y) || checkVertical(x, y) || checkDiagonal(x, y)
+    private fun checkWin(x: Int, y: Int, currentPlayer: Int): Boolean {
+        return (checkDirection(x, y, currentPlayer, 1, 0) ||
+                checkDirection(x, y, currentPlayer, 0, 1) ||
+                checkDirection(x, y, currentPlayer, 1, 1) ||
+                checkDirection(x, y, currentPlayer, 1, -1))
     }
 
-    private fun checkDiagonal(x: Int, y: Int): Boolean {
+    private fun checkDirection(x: Int, y: Int, currentPlayer: Int, dx: Int, dy: Int): Boolean {
         var count = 1
-        var i = x - 1
-        var j = y - 1
-        while (i >= 0 && j >= 0 && board[i][j] == turn) {
+        var i = x + dx
+        var j = y + dy
+        while (i in 0 until boardSize && j >= 0 && j < boardSize && board[i][j].intValue == currentPlayer) {
             count++
-            i--
-            j--
-        }
-        i = x + 1
-        j = y + 1
-        while (i < boardSize && j < boardSize && board[i][j] == turn) {
-            count++
-            i++
-            j++
-        }
-        if (count >= 5) return true
-        count = 1
-        i = x - 1
-        j = y + 1
-        while (i >= 0 && j < boardSize && board[i][j] == turn) {
-            count++
-            i--
-            j++
-        }
-        i = x + 1
-        j = y - 1
-        while (i < boardSize && j >= 0 && board[i][j] == turn) {
-            count++
-            i++
-            j--
+            i += dx
+            j += dy
         }
         return count >= 5
     }
 
-    private fun checkVertical(x: Int, y: Int): Boolean {
-        var count = 1
-        var i = y - 1
-        while (i >= 0 && board[x][i] == turn) {
-            count++
-            i--
-        }
-        i = y + 1
-        while (i < boardSize && board[x][i] == turn) {
-            count++
-            i++
-        }
-        return count >= 5
-    }
-
-    private fun checkHorizontal(x: Int, y: Int): Boolean {
-        var count = 1
-        var i = x - 1
-        while (i >= 0 && board[i][y] == turn) {
-            count++
-            i--
-        }
-        i = x + 1
-        while (i < boardSize && board[i][y] == turn) {
-            count++
-            i++
-        }
-        return count >= 5
-    }
+    fun updateTurn(value: Int) { turn = value }
 
 }
