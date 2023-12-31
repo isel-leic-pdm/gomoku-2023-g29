@@ -1,0 +1,102 @@
+package ipl.isel.daw.gomoku.lobby
+
+import android.app.Activity
+import android.content.Intent
+import android.os.Bundle
+import android.os.Parcelable
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.viewModels
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
+import ipl.isel.daw.gomoku.DependenciesContainer
+import ipl.isel.daw.gomoku.game.GameActivity
+import ipl.isel.daw.gomoku.lobby.model.LobbyViewModel
+import ipl.isel.daw.gomoku.lobby.model.RealLobbyService
+import ipl.isel.daw.gomoku.lobby.ui.LobbyState
+import ipl.isel.daw.gomoku.lobby.ui.LobbyView
+import ipl.isel.daw.gomoku.utils.viewModelInit
+import kotlinx.parcelize.Parcelize
+import okhttp3.OkHttpClient
+import java.util.UUID
+
+class LobbyActivity : ComponentActivity() {
+
+    private val httpClient: OkHttpClient by lazy {
+        OkHttpClient.Builder()
+            //.cache(Cache(directory = cacheDir, maxSize = 50 * 1024 * 1024))
+            .build()
+    }
+
+    private val jsonEncoder: Gson by lazy {
+        GsonBuilder()
+            .create()
+    }
+
+    private val repo by lazy {
+        (application as DependenciesContainer)
+    }
+
+    private val viewModel by viewModels<LobbyViewModel> {
+        viewModelInit {
+            require(repo.userInfoRepo.userInfo != null)
+            LobbyViewModel(RealLobbyService(repo.userInfoRepo.userInfo!!, httpClient, jsonEncoder))
+        }
+    }
+
+    companion object {
+        fun navigate(origin: Activity) {
+            with(origin) {
+                val intent = Intent(this, LobbyActivity::class.java)
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setContent {
+            val error by viewModel.error.collectAsState()
+            val traditional by viewModel.type.collectAsState()
+            val game by viewModel.game.collectAsState()
+            LobbyView(
+                state = LobbyState(game, traditional, error),
+                onChangeMode = { viewModel.chooseGameType() },
+                onStartOrJoinGame = { userId ->
+                    if (game != null) {
+                        viewModel.joinGame()
+                        val info = MatchInfo(
+                            game!!,
+                            userId,
+                            repo.userInfoRepo.userInfo!!.userId,
+                            whoAmI = "PLAYER2"
+                        )
+                        GameActivity.navigate(this, info)
+                    }
+                },
+                onBackRequest = { finish() },
+                onErrorReset = { viewModel.resetError() },
+            )
+        }
+
+/*        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                viewModel.fetchRooms()
+            }
+        }*/
+    }
+}
+
+@Parcelize
+data class MatchInfo (
+    val uuid: UUID,
+    val player1: UUID,
+    var player2: UUID,
+    val whoAmI: String
+    ) : Parcelable
+
+
+
