@@ -1,6 +1,5 @@
 package ipl.isel.daw.gomoku.ui
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
@@ -16,23 +15,24 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 
+
 @Composable
 fun SquareImageView(
     image: Int,
     selected: Boolean = false,
     highlight: Boolean = false,
-    onClick: () -> Unit = { }
+    onClick: () -> Unit = { },
+    modifier: Modifier = Modifier
 ) = Box(
-    modifier = Modifier
-        .size(50.dp)
+    modifier = modifier
+        .size(20.dp)
         .then(
-            if (selected) Modifier.border(width = 1.dp, color = Color.Red) else Modifier.border(
-                BorderStroke(1.dp, Color.Black)
-            )
+            if (selected)
+                Modifier.border(width = 1.dp, color = Color.Red)
+            else
+                Modifier //.border(BorderStroke(1.dp, Color.Black), shape = RectangleShape)
         )
-        .clickable(true) {
-            onClick()
-        }
+        .clickable(true) { onClick() }
 ) {
     Image(
         painter = painterResource(id = image),
@@ -50,3 +50,18 @@ fun SquareImageView(
         }
     }
 }
+
+/*
+fun Modifier.topBorder(
+    color: Color = Color.Red,
+    strokeWidth: Float = 1.dp.value
+) = this.drawWithContent {
+    drawContent()
+    drawLine(
+        color = color,
+        start = Offset(0f, 0f),
+        end = Offset(size.width, 0f),
+        strokeWidth = strokeWidth,
+        cap = StrokeCap.Square
+    )
+}*/

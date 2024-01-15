@@ -37,8 +37,9 @@
     <string name="game_resetboard">Redefinir</string>
     <string name="game_game">Jogo</string>
     <string name="game_myturn">É a sua vez!</string>
-    <string name="game_enemyturn">Aguardando pelo adversário…</string>
+    <string name="game_enemyturn">Aguardando que</string>
+    <string name="game_toplay">jogue…</string>
     <string name="traditional">Tradicional</string>
     <string name="renju">Renju</string>
-    <string name="mode">modo</string>
+    <string name="mode">Modo de jogo: </string>
 </resources>

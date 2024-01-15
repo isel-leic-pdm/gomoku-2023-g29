@@ -63,19 +63,22 @@ class LobbyActivity : ComponentActivity() {
             val traditional by viewModel.type.collectAsState()
             val game by viewModel.game.collectAsState()
             LobbyView(
-                state = LobbyState(game, traditional, error),
+                state = LobbyState(game?.id, traditional, error),
                 onChangeMode = { viewModel.chooseGameType() },
-                onStartOrJoinGame = { userId ->
-                    if (game != null) {
-                        viewModel.joinGame()
+                onStartOrJoinGame = {
+                    val job = viewModel.joinGame()
+                    while(!job.isCompleted || viewModel.isLoading.value);
+                    if(game!=null) {
                         val info = MatchInfo(
-                            game!!,
-                            userId,
-                            repo.userInfoRepo.userInfo!!.userId,
-                            whoAmI = "PLAYER2"
+                            game!!.id,
+                            game!!.userId1,
+                            game!!.userId2,
+                            whoAmI = if (game!!.userId1 == repo.userInfoRepo.userInfo!!.userId)
+                                "PLAYER1" else "PLAYER2"
                         )
                         GameActivity.navigate(this, info)
                     }
+                    viewModel.resetError()
                 },
                 onBackRequest = { finish() },
                 onErrorReset = { viewModel.resetError() },

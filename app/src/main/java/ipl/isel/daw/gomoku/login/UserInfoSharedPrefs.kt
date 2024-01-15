@@ -22,9 +22,9 @@ class UserInfoSharedPrefs(private val context: Context): UserInfoRepository {
         get() {
             val savedUsername = prefs.getString(userUsernameKey, null)
             val savedBearer = prefs.getString(userBearerKey,null)
-            val savedId = UUID.fromString(prefs.getString(userIdKey,null))
-            return if (savedUsername != null && savedBearer != null)
-                UserInfo(savedUsername, savedBearer, savedId)
+            val savedId = prefs.getString(userIdKey,null)
+            return if (savedUsername != null && savedBearer != null && savedId != null)
+                UserInfo(savedUsername, savedBearer, UUID.fromString(savedId))
             else
                 null
         }

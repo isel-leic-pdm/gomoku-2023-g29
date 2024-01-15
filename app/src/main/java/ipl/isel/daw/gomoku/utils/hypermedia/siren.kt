@@ -16,6 +16,8 @@ import java.net.URI
  */
 val SirenMediaType = "application/vnd.siren+JSON".toMediaType()
 val ApplicationJsonType = "application/problem+json".toMediaType()
+val OrdinaryJsonType = "application/json".toMediaType()
+
 
 /**
  * Gets a Siren self link for the given URI

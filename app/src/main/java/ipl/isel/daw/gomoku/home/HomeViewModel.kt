@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 class HomeViewModel(userRepo: UserInfoRepository) : ViewModel() {
 
 
-    private val _isLoggedIn = MutableStateFlow<Boolean>(userRepo.userInfo != null)
+    private val _isLoggedIn = MutableStateFlow(userRepo.userInfo != null)
     val isLoggedIn = _isLoggedIn.asStateFlow()
 
     fun login() {

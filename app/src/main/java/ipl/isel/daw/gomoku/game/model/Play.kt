@@ -37,13 +37,12 @@ data class State(val status: String) // { WAITING, BUILDING, STARTED, ENDED }
  * Class que permite ser alterada após uma jogada, para permitir que o jogador saiba
  * quando é que pode jogar
  */
-enum class Turn {
-    PLAYER1, PLAYER2
-}
+
 
 data class Room(val uuid: UUID, val player1: String)
 
 data class GameIdModel(val gameId: UUID)
+
 
 data class GameBoard(val board: String)
 
@@ -56,9 +55,10 @@ data class GameLastState(
     val winner: UUID?
 )
 
+enum class Turn { PLAYER1, PLAYER2 }
 enum class Loader { WAITING, STARTED, ENDED }
 
-data class StateGame(   //
+data class StateGame(
     val gameState: Loader?,
     val turn: String,
     var board: String,

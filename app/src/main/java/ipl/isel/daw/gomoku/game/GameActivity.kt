@@ -26,7 +26,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
-const val BOARD_SIDE = 8
+const val BOARD_SIDE = 15
 val SQUARE_SIDE: Dp = 50.dp
 val HEADER_THICKNESS: Dp = 20.dp
 const val POLLING_INTERVAL_MILLISECONDS: Long = 1000 // 1 Second
@@ -105,7 +105,7 @@ class GameActivity : ComponentActivity() {
             val currentlyPlacing by viewModel.currentlyPlacing.collectAsState()
             val placedPieces by viewModel.placedGoPieces.collectAsState()
             val board by viewModel.playerBoard.collectAsState()
-            val hit by viewModel.hit.collectAsState()
+            //val hit by viewModel.hit.collectAsState()
             val error by viewModel.error.collectAsState()
 
             GameView(

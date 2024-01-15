@@ -15,10 +15,10 @@ enum class Type(private val letter: Char) {
     }
 
     fun toImage(): Int = when (letter) { //TODO deal with this
-        '+' -> R.drawable.ic_launcher_background
-        '2' -> R.drawable.email_logo
-        '1' -> R.drawable.github_logo
-        else -> R.drawable.ic_launcher_background
+        '+' -> R.drawable.grid
+        '2' -> R.drawable.knuckles_piece
+        '1' -> R.drawable.sonic_piece
+        else -> R.drawable.grid
     }
 }
 
@@ -33,6 +33,7 @@ class Piece(var type: Type) {
 }
 
 fun Char.toPiece(): Piece = this.toPieceOrNull() ?: throw IllegalArgumentException()
+
 
 fun Char.toPieceOrNull(): Piece? = when (this) {
     '+' -> Piece(Type.SPACE)

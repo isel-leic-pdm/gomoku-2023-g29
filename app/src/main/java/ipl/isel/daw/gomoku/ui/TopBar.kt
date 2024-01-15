@@ -21,7 +21,7 @@ const val LogoutTag = "LogoutBack"
 const val ForfeitTag = "ForfeitTag"
 const val NavigateInfoTag = "NavigateInfoTag"
 const val InspectBoardTag = "InspectBoardTag"
-const val RefreshLobbyTag = "RefreshLobbyTag"
+//const val RefreshLobbyTag = "RefreshLobbyTag"
 
 @Composable
 fun TopBar(

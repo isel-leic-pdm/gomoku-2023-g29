@@ -3,6 +3,7 @@ package ipl.isel.daw.gomoku.game.model
 import kotlin.math.sqrt
 
 const val BOARD_ROWS = 15
+
 private const val BOARD_SIZE = BOARD_ROWS * BOARD_ROWS
 
 

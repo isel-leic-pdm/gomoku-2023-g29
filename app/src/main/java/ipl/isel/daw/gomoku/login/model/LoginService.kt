@@ -1,9 +1,9 @@
 package ipl.isel.daw.gomoku.login.model
 
 import com.google.gson.Gson
-import ipl.isel.daw.gomoku.utils.hypermedia.ApplicationJsonType
 import ipl.isel.daw.gomoku.HOST
 import ipl.isel.daw.gomoku.utils.handleResponse
+import ipl.isel.daw.gomoku.utils.hypermedia.ApplicationJsonType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -53,9 +53,11 @@ class RealLoginService(
             .url("$HOST/users/$username")
             .get()
             .build()
-        httpClient.newCall(request).execute().use { response ->
-            return handleResponse<UUID>(response, jsonEncoder)
+        class UserId(val id: UUID, val username: String)
+        return httpClient.newCall(request).execute().use { response ->
+            handleResponse<UserId>(response, jsonEncoder).id
         }
+
     }
 
 

@@ -23,6 +23,7 @@ import java.util.concurrent.TimeUnit
 
 
 const val TAG = "GomokuApp"
+
 const val HOST = "http://10.0.2.2:8080"
 
 

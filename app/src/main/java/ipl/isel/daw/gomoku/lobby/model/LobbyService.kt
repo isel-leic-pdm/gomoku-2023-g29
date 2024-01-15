@@ -3,7 +3,7 @@ package ipl.isel.daw.gomoku.lobby.model
 
 import com.google.gson.Gson
 import ipl.isel.daw.gomoku.HOST
-import ipl.isel.daw.gomoku.game.model.GameIdModel
+import ipl.isel.daw.gomoku.game.model.GameOutputModel
 import ipl.isel.daw.gomoku.login.model.UserInfo
 import ipl.isel.daw.gomoku.utils.getClient
 import ipl.isel.daw.gomoku.utils.handleResponse
@@ -11,11 +11,10 @@ import ipl.isel.daw.gomoku.utils.hypermedia.ApplicationJsonType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import java.util.UUID
 
 interface LobbyService {
 
-    suspend fun joinOrStartMatch(traditional: Boolean?): UUID
+    suspend fun joinOrStartMatch(traditional: Boolean?): GameOutputModel
 
 }
 
@@ -27,10 +26,10 @@ class RealLobbyService(
 
     private val client = getClient(httpClient, userInfo.bearer)
 
-    override suspend fun joinOrStartMatch(traditional: Boolean?): UUID {
+    override suspend fun joinOrStartMatch(traditional: Boolean?): GameOutputModel {
         val body = (jsonEncoder.toJson(
             mapOf(
-                "userId" to userInfo.userId,
+                "userId1" to userInfo.userId,
                 "traditional" to traditional
             )
         )).toRequestBody(ApplicationJsonType)
@@ -41,7 +40,8 @@ class RealLobbyService(
             .build()
 
         client.newCall(request).execute().use { response ->
-            return handleResponse<GameIdModel>(response, jsonEncoder).gameId
+            return handleResponse<GameOutputModel>(response, jsonEncoder)
         }
     }
 }
+

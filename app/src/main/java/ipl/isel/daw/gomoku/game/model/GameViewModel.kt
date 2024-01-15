@@ -106,7 +106,7 @@ class GameViewModel (
                 if(game != null) {
                     val newBoard = game.board.toPiecedBoard()
                     _placedGoPieces.value = newBoard.cells.toCollection(arrayListOf())
-                    _myTurn.value = checkIfMyTurn(game.board, info )
+                    _myTurn.value = checkIfMyTurn(game.board, info)
                     _currentGame.value =
                         StateGame(
                             Loader.STARTED,

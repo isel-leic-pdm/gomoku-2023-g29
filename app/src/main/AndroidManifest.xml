@@ -27,6 +27,32 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name="ipl.isel.daw.gomoku.me.MeActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name="ipl.isel.daw.gomoku.game.GameActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name="ipl.isel.daw.gomoku.lobby.LobbyActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name="ipl.isel.daw.gomoku.leaderboard.LeaderboardActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
+        <activity
+            android:name="ipl.isel.daw.gomoku.about.AboutActivity"
+            android:exported="false">
+        </activity>
+        <activity
+            android:name="ipl.isel.daw.gomoku.login.LoginActivity"
+            android:exported="false"
+            android:windowSoftInputMode="adjustPan">
+        </activity>
     </application>
 
 </manifest>

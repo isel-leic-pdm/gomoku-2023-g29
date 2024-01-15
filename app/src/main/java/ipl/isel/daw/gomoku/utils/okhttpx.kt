@@ -3,6 +3,7 @@ package ipl.isel.daw.gomoku.utils
 import com.google.gson.Gson
 import com.google.gson.JsonSyntaxException
 import ipl.isel.daw.gomoku.utils.hypermedia.ApplicationJsonType
+import ipl.isel.daw.gomoku.utils.hypermedia.OrdinaryJsonType
 import ipl.isel.daw.gomoku.utils.hypermedia.SirenMediaType
 import okhttp3.Call
 import okhttp3.Callback
@@ -38,15 +39,15 @@ suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> 
             override fun onResponse(call: Call, response: Response) {
                 try {
                     continuation.resume(handler(response))
-                }
-                catch (t: Throwable) {
+                } catch (t: Throwable) {
                     continuation.resumeWithException(t)
                 }
             }
         })
     }
 
-fun getClient(httpClient: OkHttpClient, bearer : String) = httpClient.newBuilder()
+
+fun getClient(httpClient: OkHttpClient, bearer: String) = httpClient.newBuilder()
     .addInterceptor { chain ->
         val originalRequest = chain.request()
 
@@ -57,11 +58,13 @@ fun getClient(httpClient: OkHttpClient, bearer : String) = httpClient.newBuilder
         chain.proceed(newRequest)
     }.build()
 
-inline fun <reified T: Any> handleResponse(response: Response, jsonEncoder: Gson): T {
+
+inline fun <reified T : Any> handleResponse(response: Response, jsonEncoder: Gson): T {
     val contentType = response.body?.contentType()
     val body = response.body?.string()
     return if (response.isSuccessful && response.body != null &&
-        (contentType == ApplicationJsonType || contentType == SirenMediaType)) {
+        (contentType == ApplicationJsonType || contentType == SirenMediaType || contentType == OrdinaryJsonType)
+    ) {
         try {
             jsonEncoder.fromJson(body, T::class.java)
         } catch (e: JsonSyntaxException) {

@@ -86,6 +86,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("androidx.compose.foundation:foundation:$composeUiVersion")
+    implementation(files("libs\\Gomoku-0.0.1-SNAPSHOT.jar"))
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     testImplementation ("junit:junit:4.13.2")

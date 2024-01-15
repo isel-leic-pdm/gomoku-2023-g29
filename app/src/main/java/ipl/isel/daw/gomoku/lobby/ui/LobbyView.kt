@@ -11,9 +11,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Card
-import androidx.compose.material.Checkbox
-import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.RadioButton
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,7 +25,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ipl.isel.daw.gomoku.R
-import ipl.isel.daw.gomoku.game.model.Room
 import ipl.isel.daw.gomoku.ui.TopBar
 import ipl.isel.daw.gomoku.ui.theme.GomokuAndroidTheme
 import java.util.UUID
@@ -80,45 +78,32 @@ fun CreateGameView(
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            text =  stringResource(id = R.string.game_game)+": 1",
+            text = stringResource(id = R.string.mode) + " " + stringResource(id = R.string.traditional),
             style = MaterialTheme.typography.subtitle1,
             textAlign = TextAlign.Center,
             maxLines = 1,
             modifier = Modifier
-                .padding(start = 8.dp, top = 13.dp, end = 8.dp, bottom = 16.dp),
+                .padding(start = 8.dp, top = 13.dp, bottom = 16.dp),
         )
-        ToggleButton(
-            checked = isTraditional,
-            onCheckedChange = { onGameModeToggle(it) }
-        ) {
-            Text(text =
-            if (isTraditional) stringResource(id = R.string.traditional)
-            else stringResource(id = R.string.renju))
-        }
+        RadioButton(
+            selected = isTraditional,
+            onClick = { onGameModeToggle(true) }
+        )
+        Text(
+            text =  stringResource(id = R.string.renju),
+            style = MaterialTheme.typography.subtitle1,
+            textAlign = TextAlign.Center,
+            maxLines = 1,
+            modifier = Modifier
+                .padding(start = 8.dp, top = 13.dp, bottom = 16.dp),
+        )
+        RadioButton(
+            selected = !isTraditional,
+            onClick = { onGameModeToggle(false) }
+        )
     }
 }
 
-@Composable
-fun ToggleButton(
-    checked: Boolean,
-    onCheckedChange: (Boolean) -> Unit,
-    label: @Composable () -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.clickable { onCheckedChange(!checked) }
-    ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onCheckedChange,
-            colors = CheckboxDefaults.colors(
-                checkedColor = MaterialTheme.colors.primary,
-                uncheckedColor = MaterialTheme.colors.secondary
-            )
-        )
-        label()
-    }
-}
 
 /*@Composable
 fun CreateGameView(
@@ -147,10 +132,10 @@ fun CreateGameView(
 @Composable
 fun LobbyView(
     state: LobbyState = LobbyState(),
-    onStartOrJoinGame: (UUID) -> Unit,
+    onStartOrJoinGame: () -> Unit,
     onBackRequest: () -> Unit,
     onErrorReset: () -> Unit,
-    onChangeMode: () -> Unit, //TODO
+    onChangeMode: () -> Unit,
 ) {
 
     GomokuAndroidTheme {
@@ -178,22 +163,21 @@ fun LobbyView(
                 )
                 CreateGameView(
                     onGameModeToggle = { onChangeMode() },
-                    isTraditional = state.traditional
+                    isTraditional = state.traditional,
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-/*                LazyColumn(
-                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
-                    modifier = Modifier.padding(innerPadding)
-                ) {
-                    GameInfoView(       // this will check if its traditional or not
-                        traditional = state.traditional,
-                        onGameSelected = { onStartOrJoinGame(state.game) }
-                    )
-
-                }*/
+                GameInfoView(
+                    traditional = state.traditional,
+                    onGameSelected = { onStartOrJoinGame() }
+                )
+/*              
+                GameInfoView(       // this will check if its traditional or not
+                    traditional = state.traditional,
+                    onGameSelected = { onStartOrJoinGame(state.game) }
+                )
+*/
                 if (state.error != null) {
-                    Toast.makeText(LocalContext.current, state.error, Toast.LENGTH_SHORT).show()
+                    Toast.makeText(LocalContext.current, state.error, Toast.LENGTH_LONG).show()
                     onErrorReset()
                 }
             }
@@ -230,10 +214,4 @@ private fun LobbyPreview() {
         onErrorReset = {},
         onChangeMode = {}
     )
-}
-
-private val games = buildList {
-    repeat(30) {
-        add(Room(UUID.randomUUID(), "Player$it"))
-    }
 }

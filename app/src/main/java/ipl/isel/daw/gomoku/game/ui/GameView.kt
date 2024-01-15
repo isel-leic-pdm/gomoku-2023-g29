@@ -23,6 +23,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
@@ -30,7 +31,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ipl.isel.daw.gomoku.R
 import ipl.isel.daw.gomoku.TAG
-import ipl.isel.daw.gomoku.game.BOARD_SIDE
 import ipl.isel.daw.gomoku.game.model.Board
 import ipl.isel.daw.gomoku.game.model.Loader
 import ipl.isel.daw.gomoku.game.model.Piece
@@ -51,7 +51,7 @@ fun GameView(
     currentGame: StateGame,
     playerBoard: Board,
     currentlyPlacing: Piece?,
-    placedGoPieces: ArrayList<Piece>,
+    // placedGoPieces: ArrayList<Piece>,
     myTurn: () -> Boolean,
     placePiece: () -> Unit,
     // selectPiece: (Char) -> Unit,
@@ -150,14 +150,14 @@ private fun GameStartedView(
     enemyName: UUID, //TODO its a name
 ) {
     Text(
-        text = stringResource(id = R.string.game_game),
-        style = MaterialTheme.typography.h5,
+        text = stringResource(id = R.string.mode),
+        style = MaterialTheme.typography.h6,
         color = MaterialTheme.colors.primaryVariant
     )
 
     Text(
         text = stringResource(id = R.string.game_playerboard) + " $playerName",
-        style = MaterialTheme.typography.h5,
+        style = MaterialTheme.typography.h6,
         color = MaterialTheme.colors.error
     )
     BoardView(
@@ -188,7 +188,9 @@ private fun GameStartedView(
             modifier = Modifier.size(100.dp)
         )
         Text(
-            text = "...$enemyName " + stringResource(id = R.string.game_enemyturn),
+            text = stringResource(id = R.string.game_enemyturn) +
+                    " $enemyName " +
+                    stringResource(id = R.string.game_toplay),
             style = MaterialTheme.typography.h5,
             color = MaterialTheme.colors.primaryVariant
         )
@@ -231,24 +233,35 @@ fun BoardView(
     myTurn: () -> Boolean,
     makeMove: (Pair<Int, Int>) -> Unit
 ) {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Column(horizontalAlignment = Alignment.Start) {
-            for (i in 0..7) {
-                Row() {
-                    for (j in 0..7) {
+    val config = LocalConfiguration.current
+    val height = config.screenHeightDp
+    val width = config.screenWidthDp
+    val cellRatio = if( board.size % 15 == 0) 15 else 19
+
+    val widthBox = width / cellRatio
+    val heightBox = height / cellRatio
+    val size = if (widthBox < heightBox) widthBox else heightBox
+
+    Box(modifier = Modifier.fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Column(horizontalAlignment = Alignment.Start
+        ) {
+            for (i in 0..<cellRatio) {
+                Row {
+                    for (j in 0..<cellRatio) {
                         SquareImageView(
-                            image = board[i * BOARD_SIDE + j].type.toImage(),
+                            modifier = Modifier.size(size.dp),
+                            image = board[i * cellRatio + j].type.toImage(),
                             onClick = {
-                                val p = indexToCoordinates(i * BOARD_SIDE + j)
+                                val p = indexToCoordinates(i * cellRatio + j)
                                 if (currentlyPlacing != null && canPlaceCurrentPiece(
                                         currentlyPlacing,
                                         p.first, p.second
-                                    )
-                                ) placePiece()
+                                ))
+                                    placePiece()
                                 else if (gameState == Loader.STARTED && myTurn())
-                                    makeMove(
-                                        Pair(p.first, p.second)
-                                    ) //if true hitIncrease
+                                    makeMove(Pair(p.first, p.second)) //if true hitIncrease
                             }
                         )
                     }
@@ -268,15 +281,15 @@ fun BoardView(
 @Preview(showBackground = true)
 @Composable
 private fun GamePreviewPlayingMyTurn() {
-    val boardTest = "__222___1111___22____111____121___212_____1122__222111___22121__"
-    val builtBoard = Board(boardTest)
+
+    val builtBoard = Board(15*15)
     GameView(
         onLeaveRequest = {},  //Semelhante ao onBackRequest, mas efetua uma leaveMatch, pode-se usar onBackRequested alternativamente
         info = MatchInfo(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "PLAYER1"),
         currentGame = StateGame(Loader.STARTED, "", "", 0),
         playerBoard = builtBoard,
         currentlyPlacing = null,
-        placedGoPieces = arrayListOf(),
+        //placedGoPieces = arrayListOf(),
         myTurn = { true },
         canPlaceCurrentPiece = { _,_, _ -> true },
         placePiece = {},
@@ -291,15 +304,14 @@ private fun GamePreviewPlayingMyTurn() {
 @Preview(showBackground = true)
 @Composable
 private fun GamePreviewPlayingEnemyTurn() {
-    val boardTest = "__222___1111___22____111____121___212_____1122__222111___22121__"
-    val builtBoard = Board(boardTest)
+    val builtBoard = Board(15*15)
     GameView(
         onLeaveRequest = {},  //Semelhante ao onBackRequest, mas efetua uma leaveMatch, pode-se usar onBackRequested alternativamente
         info = MatchInfo(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "PLAYER1"),
         currentGame = StateGame(Loader.STARTED, "", "", 0),
         playerBoard = builtBoard,
         currentlyPlacing = null,
-        placedGoPieces = arrayListOf(),
+        //placedGoPieces = arrayListOf(),
         myTurn = { false },
         canPlaceCurrentPiece = { _,_, _ -> true },
         placePiece = {},
@@ -314,8 +326,7 @@ private fun GamePreviewPlayingEnemyTurn() {
 @Preview(showBackground = true)
 @Composable
 private fun BoardPreview() {
-    val boardTest = "__222___1111___22____111____121___212_____1122__222111___22121__"
-    val builtBoard = Board(boardTest).cells
+    val builtBoard = Board(15*15).cells
     BoardView(
         board = builtBoard,
         currentlyPlacing = null,
