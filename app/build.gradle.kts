@@ -71,8 +71,8 @@ val composeUiVersion = "1.5.4"
 dependencies {
 
     implementation ("androidx.core:core-ktx:1.12.0")
-    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.6.2")
-    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.2")
+    implementation ("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation ("androidx.lifecycle:lifecycle-viewmodel-ktx:2.7.0")
     implementation ("androidx.activity:activity-compose:1.8.2")
 
 
@@ -86,7 +86,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     implementation("androidx.compose.foundation:foundation:$composeUiVersion")
-    implementation(files("libs\\Gomoku-0.0.1-SNAPSHOT.jar"))
+    implementation(files("libs/Gomoku.main.jar"))
     annotationProcessor("androidx.room:room-compiler:2.6.1")
 
     testImplementation ("junit:junit:4.13.2")
@@ -95,7 +95,7 @@ dependencies {
 
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.ext:junit-ktx:1.1.5")
-    androidTestImplementation ("io.mockk:mockk-android:1.13.8")
+    androidTestImplementation ("io.mockk:mockk-android:1.13.9")
 
     androidTestImplementation ("androidx.test:runner:1.5.2")
     androidTestImplementation ("androidx.test:rules:1.5.0")

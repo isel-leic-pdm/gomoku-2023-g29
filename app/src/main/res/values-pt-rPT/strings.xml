@@ -29,16 +29,8 @@
     <string name="game_waitingforplayer">À Espera de Jogador</string>
     <string name="game_won">Ganhou!</string>
     <string name="game_returntolobby">Retornar às Salas</string>
-    <string name="game_buildinggame">Construindo o Jogo</string>
-    <string name="game_playerboard">Tabuleiro de</string>
-    <string name="game_ready">Pronto</string>
-    <string name="game_waitingfortheopponent">À Espera do Oponente…</string>
-    <string name="game_selectpieceandtapboard">Escolha a célula e toque no tabuleiro para jogar</string>
-    <string name="game_resetboard">Redefinir</string>
-    <string name="game_game">Jogo</string>
     <string name="game_myturn">É a sua vez!</string>
-    <string name="game_enemyturn">Aguardando que</string>
-    <string name="game_toplay">jogue…</string>
+    <string name="game_enemyturn">Aguardando por oponente…</string>
     <string name="traditional">Tradicional</string>
     <string name="renju">Renju</string>
     <string name="mode">Modo de jogo: </string>

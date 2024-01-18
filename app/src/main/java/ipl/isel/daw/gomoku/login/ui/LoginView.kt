@@ -69,14 +69,14 @@ fun LoginView(
                     .fillMaxSize()
             ) {
                 if (!state.loadingState) {
-                    Row() {
+                    Row {
                         Text(
                             text = stringResource(id = R.string.login_please_introduce_your_credentials),
                             modifier = Modifier.padding(8.dp)
                         )
                     }
                     Text(text = stringResource(id = R.string.login_username), modifier = Modifier.padding(8.dp))
-                    Row() {
+                    Row {
                         TextField(
                             value = currentUsername,
                             singleLine = true,
@@ -89,7 +89,7 @@ fun LoginView(
                         )
                     }
                     Text(text =  stringResource(id = R.string.login_password), modifier = Modifier.padding(8.dp))
-                    Row() {
+                    Row {
                         TextField(
                             value = currentPassword,
                             singleLine = true,
@@ -116,7 +116,7 @@ fun LoginView(
                             }
                         )
                     }
-                    Row() {
+                    Row {
                         Button(onClick = {
                             if (onSignupRequest != null) {
                                 onSignupRequest(currentUsername, currentPassword)
@@ -169,12 +169,10 @@ private fun ensureInputBounds(input: String) =
 @Preview(showBackground = true)
 @Composable
 private fun SignInOrSignUpWaitingForInputPreview() {
-    fun signUp(name: String, pass: String): Unit {}
-    fun signIn(name: String, pass: String): Unit {}
     LoginView(
         state = LoginScreenState(null, false, null),
-        onSignupRequest = ::signUp,
-        onSignInRequest = ::signIn,
+        onSignupRequest = fun(_: String, _: String) {},
+        onSignInRequest = fun(_: String, _: String) {},
         onBackRequest = {}
     )
 }
@@ -182,12 +180,10 @@ private fun SignInOrSignUpWaitingForInputPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun SignInOrSignUpWaitingForResponsePreview() {
-    fun signUp(name: String, pass: String): Unit {}
-    fun signIn(name: String, pass: String): Unit {}
     LoginView(
         state = LoginScreenState(null, true, null),
-        onSignupRequest = ::signUp,
-        onSignInRequest = ::signIn,
+        onSignupRequest = fun(_: String, _: String) {},
+        onSignInRequest = fun(_: String, _: String) {},
         onBackRequest = {}
     )
 }

@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-/**
+/*
  * View model for the Lobby Screen hosted by [LobbyActivity]
  */
 class LobbyViewModel(
@@ -39,6 +39,10 @@ class LobbyViewModel(
             _isLoading.value = true
             try {
                 _game.value = async { lobbyService.joinOrStartMatch(_type.value) }.await()
+                if(_game.value == null)
+                    _error.value = "Error joining game, API probably isn't Online"
+                else
+                    Log.v(TAG, "Game joined: ${_game.value}")
             } catch (e: Exception) {
                 Log.v(TAG, e.toString())
                 val errorMessage = e.toString().split(": ").last()

@@ -1,14 +1,8 @@
 package ipl.isel.daw.gomoku.utils.hypermedia
 
-import com.google.gson.JsonDeserializationContext
-import com.google.gson.JsonDeserializer
-import com.google.gson.JsonElement
-import com.google.gson.JsonObject
 import com.google.gson.annotations.SerializedName
-import com.google.gson.reflect.TypeToken
 import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
-import java.lang.reflect.Type
 import java.net.URI
 
 /**
@@ -19,27 +13,29 @@ val ApplicationJsonType = "application/problem+json".toMediaType()
 val OrdinaryJsonType = "application/json".toMediaType()
 
 
-/**
+/*
  * Gets a Siren self link for the given URI
  *
- * @param uri   the string with the self URI
+ * @param uri the string with the self URI
  * @return the resulting siren link
  */
-fun selfLink(uri: String) = SirenLink(rel = listOf("self"), href = URI(uri))
+//fun selfLink(uri: String) = SirenLink(rel = listOf("self"), href = URI(uri))
 
 /**
  * Class whose instances represent links as they are represented in Siren.
  */
+/*
 data class SirenLink(
     val rel: List<String>,
     val href: URI,
     val title: String? = null,
     val type: MediaType? = null)
+*/
 
 /**
  * Class whose instances represent actions that are included in a siren entity.
  */
-data class SirenAction(
+/*data class SirenAction(
     val name: String,
     val href: URI,
     val title: String? = null,
@@ -49,18 +45,18 @@ data class SirenAction(
     val type: String? = null,
     val fields: List<Field>? = null
 ) {
-    /**
+    *//**
      * Represents action's fields
-     */
+     *//*
     data class Field(
         val name: String,
         val type: String? = null,
         val value: String? = null,
         val title: String? = null
     )
-}
+}*/
 
-data class SirenEntity<T>(
+/*data class SirenEntity<T>(
     @SerializedName("class") val clazz: List<String>? = null,
     val properties: List<T> = emptyList(),
     val entities: List<SubEntity>? = null,
@@ -72,9 +68,9 @@ data class SirenEntity<T>(
         inline fun <reified T> getType(): TypeToken<SirenEntity<T>> =
             object : TypeToken<SirenEntity<T>>() { }
     }
-}
+}*/
 
-/**
+/*
  * Base class for admissible sub entities, namely, [EmbeddedLink] and [EmbeddedEntity].
  * Notice that this is a closed class hierarchy.
  */
@@ -89,7 +85,7 @@ data class EmbeddedLink(
     val title: String? = null
 ) : SubEntity()
 
-data class EmbeddedEntity<T>(
+/*data class EmbeddedEntity<T>(
     val rel: List<String>,
     @SerializedName("class") val clazz: List<String>? = null,
     val properties: T? =null,
@@ -102,13 +98,13 @@ data class EmbeddedEntity<T>(
         inline fun <reified T> getType(): TypeToken<EmbeddedEntity<T>> =
             object : TypeToken<EmbeddedEntity<T>>() { }
     }
-}
+}*/
 
 
 /**
  * Gson deserializer for the SubEntity sum type
  */
-class SubEntityDeserializer<T>(private val propertiesType: Type) : JsonDeserializer<SubEntity> {
+/*class SubEntityDeserializer<T>(private val propertiesType: Type) : JsonDeserializer<SubEntity> {
 
     override fun deserialize(
         json: JsonElement,
@@ -136,8 +132,9 @@ class SubEntityDeserializer<T>(private val propertiesType: Type) : JsonDeseriali
             context.deserialize(entity, EmbeddedLink::class.java)
         }
     }
-}
+}*/
 
+/*
 private fun JsonObject.getAsListOfString(propertyName: String): List<String>? =
     getAsJsonArray(propertyName)?.map { it.asString }
 
@@ -149,4 +146,5 @@ private fun <T> JsonObject.getAsListOf(
     getAsJsonArray(propertyName)?.map {
         context.deserialize<T>(it, type)
     }
+*/
 

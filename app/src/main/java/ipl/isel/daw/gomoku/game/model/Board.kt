@@ -6,24 +6,10 @@ const val BOARD_ROWS = 15
 
 private const val BOARD_SIZE = BOARD_ROWS * BOARD_ROWS
 
-
-enum class ApiCells(val char: Char) {
-    EMPTY('+'),
-    PLAYER_ONE('1'),
-    PLAYER_TWO('2');
-
-    companion object {
-        fun fromChar(char: Char): ApiCells {
-            return when (char) {
-                '+' -> EMPTY
-                '1' -> PLAYER_ONE
-                '2' -> PLAYER_TWO
-                else -> throw IllegalArgumentException("Invalid value for CellState")
-            }
-        }
-    }
+enum class ApiCells {
+    PLAYER_ONE,
+    PLAYER_TWO;
 }
-
 
 data class BoardAPI(val gamesize: Boolean, val cells: Array<Array<String>>, val size: Int) {
 
@@ -59,8 +45,7 @@ data class BoardAPI(val gamesize: Boolean, val cells: Array<Array<String>>, val 
     }
 }
 
-
-class Board{
+class Board {
     private var size: Int? = null
     var cells: Array<Piece>
 
@@ -77,8 +62,7 @@ class Board{
         val board = Board().cells
         val size = size ?: BOARD_SIZE
         val sqr = sqrt(size.toDouble()).toInt() // 15 * 15 = 225 -> 15 | 19 * 19 = 361 -> 19
-        val chunkedBoard = boardString.chunked(sqr).map{ it.reversed() }
-
+        val chunkedBoard = boardString.chunked(sqr).map{ it }
         for (i in 0 until sqr){
             for (j in 0 until sqr) {
                 board[i * sqr + j] = chunkedBoard[i][j].toPiece()
@@ -92,19 +76,11 @@ class Board{
         cells.forEach { microsoftWord.append(it.type.get()) }
         return microsoftWord.toString()
     }
-
 }
 
-class GoPiece (var l :Int=0, var c :Int=0)
-
 fun indexToCoordinates (index: Int): Pair<Int,Int> {
-    val row = index / BOARD_ROWS + 1
-    val col = index % BOARD_ROWS + 1
+    val row = index / BOARD_ROWS
+    val col = index % BOARD_ROWS
     return Pair(row, col)
 }
 
-fun getIndexes(goPiece: GoPiece): ArrayList<Int> {
-    val indices: ArrayList<Int> = ArrayList()
-    indices.add(BOARD_ROWS * goPiece.l + goPiece.c)
-    return indices
-}

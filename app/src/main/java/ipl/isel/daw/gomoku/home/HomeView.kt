@@ -8,7 +8,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import ipl.isel.daw.gomoku.R
 import ipl.isel.daw.gomoku.login.model.UserInfo
 import ipl.isel.daw.gomoku.ui.TopBar
@@ -36,7 +39,9 @@ fun HomeView(
 ) {
     GomokuAndroidTheme {
         Scaffold(
-            modifier = Modifier.fillMaxSize().testTag(HomeScreenTag),
+            modifier = Modifier
+                .fillMaxSize()
+                .testTag(HomeScreenTag),
             backgroundColor = MaterialTheme.colors.background,
             topBar = {
                 if (state.loggedState) {
@@ -57,42 +62,49 @@ fun HomeView(
                     .padding(innerPadding)
                     .fillMaxSize()
             ) {
-                Row() {
-                    Text(
-                        text = "GOMOKU",
-                        style = MaterialTheme.typography.h2,
-                        color = MaterialTheme.colors.primaryVariant
+                Row {
+                    Text(text = stringResource(id = R.string.app_name),
+                        style = MaterialTheme.typography.h1,
+                        color = MaterialTheme.colors.primaryVariant,
+                        fontFamily = FontFamily(Font(R.font.dancing_font))
                     )
                 }
-                ButtonView(
-                    onClickRequest = { onFindGameRequest() },
-                    name = stringResource(id = R.string.play),
-                    state = state.loggedState,
-                    testTag = "PlayButton"
-                )
-                ButtonView(
-                    onClickRequest = { onMeRequest() },
-                    name = stringResource(id = R.string.home_profile_button),
-                    state = state.loggedState,
-                    testTag = "ProfileButton"
-
-                )
-                ButtonView(onClickRequest = { onLeaderboardRequest() },
-                    name = stringResource(id = R.string.home_leaderboard_button),
-                    testTag = "LeaderboardButton"
-                )
-                if (!state.loggedState) {
+                Column(
+                    verticalArrangement = Arrangement.SpaceEvenly,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.fillMaxWidth()
+                                ) {
                     ButtonView(
-                        onClickRequest = { onSignInOrSignUpRequest() },
-                        name = stringResource(id = R.string.home_signinup_button),
-                        testTag = "SignInAndSignUpButton"
+                        onClickRequest = { onFindGameRequest() },
+                        name = stringResource(id = R.string.play),
+                        state = state.loggedState,
+                        testTag = "PlayButton"
+                    )
+                    ButtonView(
+                        onClickRequest = { onMeRequest() },
+                        name = stringResource(id = R.string.home_profile_button),
+                        state = state.loggedState,
+                        testTag = "ProfileButton"
+
+                    )
+                    ButtonView(
+                        onClickRequest = { onLeaderboardRequest() },
+                        name = stringResource(id = R.string.home_leaderboard_button),
+                        testTag = "LeaderboardButton"
+                    )
+                    if (!state.loggedState) {
+                        ButtonView(
+                            onClickRequest = { onSignInOrSignUpRequest() },
+                            name = stringResource(id = R.string.home_signinup_button),
+                            testTag = "SignInAndSignUpButton"
+                        )
+                    }
+                    ButtonView(
+                        onClickRequest = { onExitRequest() },
+                        name = stringResource(id = R.string.home_exit_button),
+                        testTag = "ExitButton"
                     )
                 }
-                ButtonView(
-                    onClickRequest = { onExitRequest() },
-                    name = stringResource(id = R.string.home_exit_button),
-                    testTag = "ExitButton"
-                )
             }
         }
     }
@@ -101,24 +113,26 @@ fun HomeView(
 @Composable
 fun ButtonView(onClickRequest: () -> Unit, name: String, state: Boolean? = null, testTag: String) {
     if (state == null) {
-        Row() {
-            Button(onClick = { onClickRequest() }, modifier = Modifier.testTag(testTag)) {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.h5,
-                )
-            }
+        Button(
+            onClick = { onClickRequest() },
+            modifier = Modifier.testTag(testTag)) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.h5,
+            )
         }
     } else {
-        Row() {
-            Button(onClick = { onClickRequest() }, enabled = state, modifier = Modifier.testTag(testTag)) {
-                Text(
-                    text = name,
-                    style = MaterialTheme.typography.h5,
-                )
-            }
+        Button(
+            onClick = { onClickRequest() },
+            enabled = state,
+            modifier = Modifier.testTag(testTag)) {
+            Text(
+                text = name,
+                style = MaterialTheme.typography.h5,
+            )
         }
     }
+    Spacer(modifier = Modifier.height(20.dp))
 }
 
 @Preview(showBackground = true)

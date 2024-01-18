@@ -24,10 +24,7 @@ import ipl.isel.daw.gomoku.leaderboard.model.PlayerInfo
 import ipl.isel.daw.gomoku.ui.TopBar
 import ipl.isel.daw.gomoku.ui.theme.GomokuAndroidTheme
 
-const val PlayerFoundViewTag = "PlayerFoundView"
 const val RankingsViewTag = "RankingsView"
-const val LeaderboardScreenTag = "LeaderboardScreenTag"
-
 
 data class LeaderboardState(
     val playerFound: PlayerInfo? = null,
@@ -111,7 +108,7 @@ fun LeaderboardView(
                     style = MaterialTheme.typography.h5,
                     color = MaterialTheme.colors.primaryVariant
                 )
-                Row() {
+                Row {
                     Text(
                         text = stringResource(id = R.string.leaderboard_name),
                         style = MaterialTheme.typography.subtitle2,
@@ -200,7 +197,7 @@ private fun LeaderboardWithoutPlayerPreview() {
 @Preview(showBackground = true)
 @Composable
 private fun LeaderboardPreview() {
-    val sut = PlayerInfo("Teste", 1, 1)
+    val sut = PlayerInfo("Test", 1, 1)
     LeaderboardView(
         state = LeaderboardState(sut, leaderboard),
         onFindPlayer = {},

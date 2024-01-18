@@ -28,16 +28,8 @@
     <string name="game_waitingforplayer">Waiting for Player</string>
     <string name="game_won">Won!</string>
     <string name="game_returntolobby">Return to Lobby</string>
-    <string name="game_buildinggame">Building Game</string>
-    <string name="game_playerboard">Board of</string>
-    <string name="game_ready">Ready</string>
-    <string name="game_waitingfortheopponent">Waiting For The Opponent…</string>
-    <string name="game_selectpieceandtapboard">Select Cell and Tap Board to Place</string>
-    <string name="game_resetboard">Reset</string>
-    <string name="game_game">Game</string>
     <string name="game_myturn">Your turn!</string>
-    <string name="game_enemyturn">Awaiting for</string>
-    <string name="game_toplay">to play…</string>
+    <string name="game_enemyturn">Awaiting for opponent…</string>
     <string name="traditional">Traditional</string>
     <string name="renju">Renju</string>
     <string name="mode">Gamemode: </string>

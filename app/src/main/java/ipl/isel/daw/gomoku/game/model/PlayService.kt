@@ -5,13 +5,9 @@ import ipl.isel.daw.gomoku.HOST
 import ipl.isel.daw.gomoku.login.model.UserInfo
 import ipl.isel.daw.gomoku.utils.handleResponse
 import ipl.isel.daw.gomoku.utils.hypermedia.ApplicationJsonType
-import ipl.isel.daw.gomoku.game.model.GameBoard
-import ipl.isel.daw.gomoku.game.model.GameOutputModel
-import ipl.isel.daw.gomoku.game.model.HitOrMiss
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
-import okhttp3.internal.EMPTY_REQUEST
 import java.util.UUID
 
 interface PlayService {
@@ -45,9 +41,13 @@ class RealPlayService(
         }.build()
 
     override suspend fun forfeitMatch(gameId: UUID) {
+        val body = (jsonEncoder.toJson(
+            mapOf("userId" to userInfo.userId)
+        )).toRequestBody(ApplicationJsonType)
+
         val request = Request.Builder()
             .url("$HOST/games/forfeit/$gameId")
-            .post(EMPTY_REQUEST)
+            .post(body)
             .build()
 
         client.newCall(request).execute().use { response ->
@@ -76,7 +76,7 @@ class RealPlayService(
 
         val request = Request.Builder()
             .url("$HOST/games/piece/$gameId")
-            .put(body)
+            .post(body)
             .build()
 
         client.newCall(request).execute().use { response ->

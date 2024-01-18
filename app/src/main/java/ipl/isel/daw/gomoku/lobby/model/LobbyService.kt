@@ -11,10 +11,12 @@ import ipl.isel.daw.gomoku.utils.hypermedia.ApplicationJsonType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
+import java.util.logging.Level
+import java.util.logging.Logger
 
 interface LobbyService {
 
-    suspend fun joinOrStartMatch(traditional: Boolean?): GameOutputModel
+    suspend fun joinOrStartMatch(traditional: Boolean?): GameOutputModel?
 
 }
 
@@ -26,7 +28,7 @@ class RealLobbyService(
 
     private val client = getClient(httpClient, userInfo.bearer)
 
-    override suspend fun joinOrStartMatch(traditional: Boolean?): GameOutputModel {
+    override suspend fun joinOrStartMatch(traditional: Boolean?): GameOutputModel? {
         val body = (jsonEncoder.toJson(
             mapOf(
                 "userId1" to userInfo.userId,
@@ -38,9 +40,15 @@ class RealLobbyService(
             .url("$HOST/games/start")
             .post(body)
             .build()
-
-        client.newCall(request).execute().use { response ->
-            return handleResponse<GameOutputModel>(response, jsonEncoder)
+        try {
+            client.newCall(request).execute().use { response ->
+                return handleResponse<GameOutputModel>(response, jsonEncoder)
+            }
+        } catch (e: Exception) {
+            Logger
+                .getLogger(RealLobbyService::class.java.name)
+                .log(Level.WARNING, e.message + "\n" +e.cause.toString())
+            return null
         }
     }
 }

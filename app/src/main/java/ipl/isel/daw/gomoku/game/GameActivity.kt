@@ -4,21 +4,20 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import ipl.isel.daw.gomoku.DependenciesContainer
 import ipl.isel.daw.gomoku.game.model.GameViewModel
-import ipl.isel.daw.gomoku.game.model.Piece
 import ipl.isel.daw.gomoku.game.model.RealPlayService
 import ipl.isel.daw.gomoku.game.ui.GameView
+import ipl.isel.daw.gomoku.game.ui.toStringToLog
 import ipl.isel.daw.gomoku.lobby.MatchInfo
 import ipl.isel.daw.gomoku.utils.viewModelInit
 import kotlinx.coroutines.Dispatchers
@@ -26,10 +25,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 
-const val BOARD_SIDE = 15
-val SQUARE_SIDE: Dp = 50.dp
-val HEADER_THICKNESS: Dp = 20.dp
-const val POLLING_INTERVAL_MILLISECONDS: Long = 1000 // 1 Second
+const val POLLING_INTERVAL_MILLISECONDS: Long = 2000 // 1 Second
 
 class GameActivity : ComponentActivity() {
 
@@ -102,11 +98,10 @@ class GameActivity : ComponentActivity() {
         setContent {
             val processedInfo by viewModel.processedInfo.collectAsState()
             val currentGame by viewModel.currentGame.collectAsState()
-            val currentlyPlacing by viewModel.currentlyPlacing.collectAsState()
-            val placedPieces by viewModel.placedGoPieces.collectAsState()
             val board by viewModel.playerBoard.collectAsState()
-            //val hit by viewModel.hit.collectAsState()
             val error by viewModel.error.collectAsState()
+            val myTurn by viewModel.myTurn.collectAsState()
+            Log.v("GameActivity", "Board: ${board?.cells?.toStringToLog()}")
 
             GameView(
                 onLeaveRequest = {
@@ -116,24 +111,10 @@ class GameActivity : ComponentActivity() {
                 info = processedInfo,
                 currentGame = currentGame,
                 playerBoard = board,
-                currentlyPlacing = currentlyPlacing,
-                placedGoPieces = placedPieces,
-                myTurn = { viewModel.isMyTurn() },
-                placePiece = { viewModel.placePiece() },
-                //selectPiece = { piece -> viewModel.selectPiece(piece) },
-                canPlaceCurrentPiece = { piece: Piece, l: Int, c :Int ->
-                    viewModel.canPlaceCurrentPiece(
-                        piece,
-                        l, c
-                    )
-                },
+                myTurn = { myTurn },
                 makeMove = { shots: Pair<Int,Int> -> viewModel.makeMove(shots) },
-                //hit = hit,
-                // gameStart = { viewModel.gameStart() },
                 error = error,
-                onErrorReset = { viewModel.resetError() },
-                resetBoard = { viewModel.resetBoard() }
-            )
+            ) { viewModel.resetError() }
         }
     }
 }

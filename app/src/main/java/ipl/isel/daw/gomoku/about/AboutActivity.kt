@@ -78,8 +78,8 @@ class AboutActivity : ComponentActivity() {
 
 private val listOfAuthor: List<Author> = listOf(
     Author("Douglas Incáo", "A47269@alunos.isel.pt", "https://github.com/Jorgulas"),
-    Author("Maria Rosário", "AXX@alunos.isel.pt", "https://github.com/XX"),
-    Author("João Nunes", "AXX@alunos.isel.pt", "https://github.com/XX")
+    Author("Maria do Rosário", "A46042@alunos.isel.pt", "https://github.com/rosariomachado"),
+    Author("João Nunes", "A49475@alunos.isel.pt", "https://github.com/JoaoNunes49475")
 )
 
 

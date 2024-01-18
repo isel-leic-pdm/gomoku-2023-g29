@@ -13,6 +13,7 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import ipl.isel.daw.gomoku.DependenciesContainer
 import ipl.isel.daw.gomoku.game.GameActivity
+import ipl.isel.daw.gomoku.game.model.Turn
 import ipl.isel.daw.gomoku.lobby.model.LobbyViewModel
 import ipl.isel.daw.gomoku.lobby.model.RealLobbyService
 import ipl.isel.daw.gomoku.lobby.ui.LobbyState
@@ -57,6 +58,25 @@ class LobbyActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //val context = this
+/*        lifecycleScope.launch(Dispatchers.IO) {
+            while (true) {
+                // refresh the game state
+                val game = viewModel.game.value
+                if(game!=null) {
+                    val info = MatchInfo(
+                        game.id,
+                        game.userId1,
+                        game.userId2,
+                        whoAmI = if (game.userId1 == repo.userInfoRepo.userInfo!!.userId)
+                            Turn.PLAYER1.name else Turn.PLAYER2.name
+                    )
+                    GameActivity.navigate(context, info)
+                }
+                // delay the next refresh
+                delay(POLLING_INTERVAL_MILLISECONDS)
+            }
+        }*/
 
         setContent {
             val error by viewModel.error.collectAsState()
@@ -67,17 +87,17 @@ class LobbyActivity : ComponentActivity() {
                 onChangeMode = { viewModel.chooseGameType() },
                 onStartOrJoinGame = {
                     val job = viewModel.joinGame()
-                    while(!job.isCompleted || viewModel.isLoading.value);
-                    if(game!=null) {
-                        val info = MatchInfo(
-                            game!!.id,
-                            game!!.userId1,
-                            game!!.userId2,
-                            whoAmI = if (game!!.userId1 == repo.userInfoRepo.userInfo!!.userId)
-                                "PLAYER1" else "PLAYER2"
-                        )
-                        GameActivity.navigate(this, info)
-                    }
+                    while(!job.isCompleted || viewModel.isLoading.value || viewModel.game.value == null);
+                    val game2 = viewModel.game.value
+                    val info = MatchInfo(
+                        game2!!.id,
+                        game2.userId1,
+                        game2.userId2,
+                        whoAmI = if (game2.userId1 == repo.userInfoRepo.userInfo!!.userId)
+                            Turn.PLAYER1.name else Turn.PLAYER2.name
+                    )
+                    GameActivity.navigate(this, info)
+
                     viewModel.resetError()
                 },
                 onBackRequest = { finish() },

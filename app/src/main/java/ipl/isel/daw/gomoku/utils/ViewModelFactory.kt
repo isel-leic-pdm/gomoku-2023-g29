@@ -9,5 +9,4 @@ import androidx.lifecycle.ViewModelProvider
 fun <T> viewModelInit(block: () -> T) =
     object : ViewModelProvider.Factory {
         override fun <T : ViewModel> create(modelClass: Class<T>) = block() as T
-
     }

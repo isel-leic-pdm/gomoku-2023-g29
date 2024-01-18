@@ -27,6 +27,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ipl.isel.daw.gomoku.R
@@ -35,6 +38,8 @@ import ipl.isel.daw.gomoku.game.model.Board
 import ipl.isel.daw.gomoku.game.model.Loader
 import ipl.isel.daw.gomoku.game.model.Piece
 import ipl.isel.daw.gomoku.game.model.StateGame
+import ipl.isel.daw.gomoku.game.model.Turn
+import ipl.isel.daw.gomoku.game.model.Type
 import ipl.isel.daw.gomoku.game.model.indexToCoordinates
 import ipl.isel.daw.gomoku.lobby.MatchInfo
 import ipl.isel.daw.gomoku.lobby.ui.LobbyScreenTag
@@ -46,31 +51,18 @@ import java.util.UUID
 
 @Composable
 fun GameView(
-    onLeaveRequest: () -> Unit,  //Semelhante ao onBackRequest, mas efetua uma leaveMatch, pode-se usar onBackRequested alternativamente
+    // Semelhante ao onBackRequest, mas efetua uma leaveMatch, pode-se usar onBackRequested alternativamente
+    onLeaveRequest: () -> Unit,
     info: MatchInfo,
     currentGame: StateGame,
-    playerBoard: Board,
-    currentlyPlacing: Piece?,
-    // placedGoPieces: ArrayList<Piece>,
+    playerBoard: Board?,
     myTurn: () -> Boolean,
-    placePiece: () -> Unit,
-    // selectPiece: (Char) -> Unit,
-    canPlaceCurrentPiece: (p: Piece, l: Int, c: Int) -> Boolean,
-    // placements: () -> Array<Piece>,
     makeMove: (Pair<Int, Int>) -> Unit,
-    // gameStart: () -> Unit,
     error: String?,
     onErrorReset: () -> Unit,
-    resetBoard: () -> Unit
 ) {
 
     val view = rememberSaveable { mutableStateOf(false) }
-    val readyButtonClicked = rememberSaveable { mutableStateOf(false) }
-
-    var disabledButtonIndex: Int? = null
-    val playerName = if (info.whoAmI == "PLAYER1") info.player1 else info.player2
-    val enemyName = if (info.whoAmI == "PLAYER1") info.player2 else info.player1
-
 
     GomokuAndroidTheme {
         Scaffold(
@@ -112,15 +104,10 @@ fun GameView(
 
                     Loader.STARTED -> {
                         GameStartedView(
-                            playerName,
-                            playerBoard,
-                            currentlyPlacing,
-                            canPlaceCurrentPiece,
-                            placePiece,
-                            currentGame,
-                            myTurn,
-                            makeMove,
-                            enemyName,
+                            playerBoard = playerBoard,
+                            makeMove = makeMove,
+                            currentGame = currentGame,
+                            myTurn = myTurn,
                         )
                     }
                     else -> {
@@ -139,36 +126,41 @@ fun GameView(
 
 @Composable
 private fun GameStartedView(
-    playerName: UUID, //TODO its a name
-    playerBoard: Board,
-    currentlyPlacing: Piece?,
-    canPlaceCurrentPiece: (piece: Piece, l: Int, c: Int) -> Boolean,
-    placePiece: () -> Unit,
+    playerBoard: Board?,
+    makeMove: (Pair<Int, Int>) -> Unit,
     currentGame: StateGame,
     myTurn: () -> Boolean,
-    makeMove: (Pair<Int,Int>) -> Unit,
-    enemyName: UUID, //TODO its a name
 ) {
-    Text(
-        text = stringResource(id = R.string.mode),
-        style = MaterialTheme.typography.h6,
-        color = MaterialTheme.colors.primaryVariant
-    )
+    Text(text = stringResource(id = R.string.app_name),
+        style = MaterialTheme.typography.h3,
+        color = MaterialTheme.colors.primaryVariant,
+        textAlign = TextAlign.Center,
+        fontFamily = FontFamily(Font(R.font.dancing_font))
+        )
 
+    val gameMode = if(playerBoard?.cells?.size?.rem(15) == 0)
+        stringResource(id = R.string.traditional)
+    else
+        stringResource(id = R.string.renju)
+    Log.v(TAG, "Game mode: $gameMode")
     Text(
-        text = stringResource(id = R.string.game_playerboard) + " $playerName",
+        text = stringResource(id = R.string.mode) + " $gameMode",
         style = MaterialTheme.typography.h6,
-        color = MaterialTheme.colors.error
+        color = MaterialTheme.colors.primaryVariant,
+        textAlign = TextAlign.Center,
     )
-    BoardView(
-        board = playerBoard.cells,
-        currentlyPlacing = currentlyPlacing,
-        canPlaceCurrentPiece = canPlaceCurrentPiece,
-        gameState = currentGame.gameState,
-        placePiece = placePiece,
-        myTurn = myTurn,
-        makeMove = makeMove
-    )
+    
+    if (playerBoard != null) {
+        BoardView(
+            board = playerBoard.cells,
+/*            currentlyPlacing = currentlyPlacing,
+            canPlaceCurrentPiece = canPlaceCurrentPiece,
+            placePiece = placePiece,*/
+            gameState = currentGame.gameState,
+            myTurn = myTurn,
+            makeMove = makeMove
+        )
+    }
 
     if (myTurn()) {
         Icon(
@@ -188,9 +180,7 @@ private fun GameStartedView(
             modifier = Modifier.size(100.dp)
         )
         Text(
-            text = stringResource(id = R.string.game_enemyturn) +
-                    " $enemyName " +
-                    stringResource(id = R.string.game_toplay),
+            text = stringResource(id = R.string.game_enemyturn),
             style = MaterialTheme.typography.h5,
             color = MaterialTheme.colors.primaryVariant
         )
@@ -212,6 +202,7 @@ private fun GameEndedView(
     info: MatchInfo,
     onLeaveRequest: () -> Unit
 ) {
+
     val winner = if (currentGame.result == 1) info.player1 else info.player2
 
     Text(
@@ -226,9 +217,6 @@ private fun GameEndedView(
 @Composable
 fun BoardView(
     board: Array<Piece>,
-    currentlyPlacing: Piece?,
-    canPlaceCurrentPiece: (piece: Piece, l: Int, c: Int) -> Boolean,
-    placePiece: () -> Unit,
     gameState: Loader?,
     myTurn: () -> Boolean,
     makeMove: (Pair<Int, Int>) -> Unit
@@ -236,16 +224,17 @@ fun BoardView(
     val config = LocalConfiguration.current
     val height = config.screenHeightDp
     val width = config.screenWidthDp
-    val cellRatio = if( board.size % 15 == 0) 15 else 19
+    val cellRatio = if( board.size % 15 == 0 ) 15 else 19
 
     val widthBox = width / cellRatio
     val heightBox = height / cellRatio
     val size = if (widthBox < heightBox) widthBox else heightBox
+    Log.v(TAG, board.toStringToLog())
 
     Box(modifier = Modifier.fillMaxWidth(),
         contentAlignment = Alignment.Center
     ) {
-        Column(horizontalAlignment = Alignment.Start
+        Column(horizontalAlignment = Alignment.CenterHorizontally
         ) {
             for (i in 0..<cellRatio) {
                 Row {
@@ -255,13 +244,10 @@ fun BoardView(
                             image = board[i * cellRatio + j].type.toImage(),
                             onClick = {
                                 val p = indexToCoordinates(i * cellRatio + j)
-                                if (currentlyPlacing != null && canPlaceCurrentPiece(
-                                        currentlyPlacing,
-                                        p.first, p.second
-                                ))
-                                    placePiece()
-                                else if (gameState == Loader.STARTED && myTurn())
-                                    makeMove(Pair(p.first, p.second)) //if true hitIncrease
+                                Log.v(TAG, "Clicked on $p at $i,$j with ratio: ${i * cellRatio + j}")
+                                if (gameState == Loader.STARTED && myTurn()) {
+                                    makeMove(Pair(p.second, p.first)) //if true hitIncrease
+                                }
                             }
                         )
                     }
@@ -269,6 +255,12 @@ fun BoardView(
             }
         }
     }
+}
+
+fun <T> Array<T>.toStringToLog(): String {
+    val str = StringBuilder()
+    this.forEach { str.append(it.toString()) }
+    return str.toString()
 }
 
 
@@ -285,42 +277,33 @@ private fun GamePreviewPlayingMyTurn() {
     val builtBoard = Board(15*15)
     GameView(
         onLeaveRequest = {},  //Semelhante ao onBackRequest, mas efetua uma leaveMatch, pode-se usar onBackRequested alternativamente
-        info = MatchInfo(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "PLAYER1"),
+        info = MatchInfo(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), Turn.PLAYER1.name),
         currentGame = StateGame(Loader.STARTED, "", "", 0),
         playerBoard = builtBoard,
-        currentlyPlacing = null,
-        //placedGoPieces = arrayListOf(),
         myTurn = { true },
-        canPlaceCurrentPiece = { _,_, _ -> true },
-        placePiece = {},
-        //placements = { emptyArray() },
         makeMove = {},
         error = null,
-        onErrorReset = {},
-        resetBoard = {}
-    )
+    ) {}
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun GamePreviewPlayingEnemyTurn() {
     val builtBoard = Board(15*15)
+    builtBoard.cells[0] = Piece(Type.PLAYER_1)
+    builtBoard.cells[1] = Piece(Type.PLAYER_2)
+    builtBoard.cells[15] = Piece(Type.PLAYER_1)
+    builtBoard.cells[16] = Piece(Type.PLAYER_2)
+    builtBoard.cells[30] = Piece(Type.PLAYER_1)
     GameView(
         onLeaveRequest = {},  //Semelhante ao onBackRequest, mas efetua uma leaveMatch, pode-se usar onBackRequested alternativamente
-        info = MatchInfo(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), "PLAYER1"),
+        info = MatchInfo(UUID.randomUUID(), UUID.randomUUID(), UUID.randomUUID(), Turn.PLAYER1.name),
         currentGame = StateGame(Loader.STARTED, "", "", 0),
         playerBoard = builtBoard,
-        currentlyPlacing = null,
-        //placedGoPieces = arrayListOf(),
         myTurn = { false },
-        canPlaceCurrentPiece = { _,_, _ -> true },
-        placePiece = {},
-        //placements = { emptyArray() },
         makeMove = {},
         error = null,
-        onErrorReset = {},
-        resetBoard = {}
-    )
+    ) {}
 }
 
 @Preview(showBackground = true)
@@ -329,9 +312,6 @@ private fun BoardPreview() {
     val builtBoard = Board(15*15).cells
     BoardView(
         board = builtBoard,
-        currentlyPlacing = null,
-        canPlaceCurrentPiece = { _, _, _ -> true },
-        placePiece = {},
         gameState = null,
         myTurn = { true },
         makeMove = {}

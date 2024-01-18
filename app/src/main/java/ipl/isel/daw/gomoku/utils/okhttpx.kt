@@ -5,17 +5,10 @@ import com.google.gson.JsonSyntaxException
 import ipl.isel.daw.gomoku.utils.hypermedia.ApplicationJsonType
 import ipl.isel.daw.gomoku.utils.hypermedia.OrdinaryJsonType
 import ipl.isel.daw.gomoku.utils.hypermedia.SirenMediaType
-import okhttp3.Call
-import okhttp3.Callback
 import okhttp3.OkHttpClient
-import okhttp3.Request
 import okhttp3.Response
-import java.io.IOException
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
 
-/**
+/*
  * Extension function used to send [this] request using [okHttpClient] and process the
  * received response with the given [handler]. Note that [handler] is called from a
  * OkHttp IO Thread.
@@ -27,7 +20,7 @@ import kotlin.coroutines.suspendCoroutine
  * @return the result of the response [handler]
  * @throws  [IOException] if a communication error occurs.
  * @throws  [Throwable] if any error is thrown by the response handler.
- */
+
 suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> T): T =
 
     suspendCoroutine { continuation ->
@@ -44,7 +37,7 @@ suspend fun <T> Request.send(okHttpClient: OkHttpClient, handler: (Response) -> 
                 }
             }
         })
-    }
+    }*/
 
 
 fun getClient(httpClient: OkHttpClient, bearer: String) = httpClient.newBuilder()
