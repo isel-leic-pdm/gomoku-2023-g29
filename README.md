@@ -22,6 +22,10 @@ It is a two-player game, and the players take turns to place a stone on the boar
 > [!TIP]
 > Open the console at `.\GOMOKU\app\libs`, execute `java -jar Gomoku.main.jar`. This will start the API to which the webpage and the app will send the requests to. Then initiate the App and either Login or Register yourself to start playing.  
 
+> [!TIP]
+> Open the console at `.\GOMOKU\app\webapp`, execute `npm install` (Be sure to have `npm` installed in your computer). This will install the webpack and modules necessary.
+> Then, in the same command line execute `npm run start` to initiate the Web-App. (If this doesn't work try changing the directory to `.\GOMOKU\app\webapp\src` and execute the same command).  
+
 > [!IMPORTANT]
 > Once you press *`Play`* you can choose your gamemode(*`Traditional`* or *`Renju`*). If there's no one on the auto-queue the app will return you to the home screen but also add you to the *`Wait List`*. You can try again until someone also presses *`Play`*. If not, you'll stay in the menu and in the wait list forever. Totally intended feature by the way.
 
