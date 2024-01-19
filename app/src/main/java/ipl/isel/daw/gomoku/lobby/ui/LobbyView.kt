@@ -38,7 +38,6 @@ data class LobbyState(
     val error: String? = null,
 )
 
-
 @Composable
 fun GameInfoView(
     traditional: Boolean,
@@ -105,30 +104,6 @@ fun CreateGameView(
 }
 
 
-/*@Composable
-fun CreateGameView(
-    onCreateSelected: () -> Unit,
-) {
-    Row(
-        horizontalArrangement = Arrangement.Center
-    ) {
-        Text(
-            text =  stringResource(id = R.string.game_game)+": 1",
-            style = MaterialTheme.typography.subtitle1,
-            textAlign = TextAlign.Center,
-            maxLines = 1,
-            modifier = Modifier
-                .padding(start = 8.dp, top = 13.dp, end = 8.dp, bottom = 16.dp),
-        )
-        IconButton(onClick = {
-            onCreateSelected()
-        }) {
-            Icon(Icons.Default.Add, contentDescription = null)
-        }
-    }
-}*/
-
-
 @Composable
 fun LobbyView(
     state: LobbyState = LobbyState(),
@@ -136,6 +111,7 @@ fun LobbyView(
     onBackRequest: () -> Unit,
     onErrorReset: () -> Unit,
     onChangeMode: () -> Unit,
+    onWaitQueue: () -> Boolean
 ) {
 
     GomokuAndroidTheme {
@@ -170,6 +146,12 @@ fun LobbyView(
                     traditional = state.traditional,
                     onGameSelected = { onStartOrJoinGame() }
                 )
+                if(onWaitQueue())
+                    Text(
+                        text = stringResource(id = R.string.game_waitingforplayer),
+                        style = MaterialTheme.typography.h5,
+                        color = MaterialTheme.colors.primaryVariant
+                    )
 /*              
                 GameInfoView(       // this will check if its traditional or not
                     traditional = state.traditional,
@@ -212,6 +194,7 @@ private fun LobbyPreview() {
         onStartOrJoinGame = {},
         onBackRequest = {},
         onErrorReset = {},
-        onChangeMode = {}
+        onChangeMode = {},
+        { false }
     )
 }

@@ -99,7 +99,7 @@ fun GameView(
                     }
 
                     Loader.ENDED -> {
-                        GameEndedView(currentGame, info, onLeaveRequest)
+                        GameEndedView(currentGame, onLeaveRequest)
                     }
 
                     Loader.STARTED -> {
@@ -153,9 +153,6 @@ private fun GameStartedView(
     if (playerBoard != null) {
         BoardView(
             board = playerBoard.cells,
-/*            currentlyPlacing = currentlyPlacing,
-            canPlaceCurrentPiece = canPlaceCurrentPiece,
-            placePiece = placePiece,*/
             gameState = currentGame.gameState,
             myTurn = myTurn,
             makeMove = makeMove
@@ -199,14 +196,13 @@ private fun GameWaitingView() {
 @Composable
 private fun GameEndedView(
     currentGame: StateGame,
-    info: MatchInfo,
     onLeaveRequest: () -> Unit
 ) {
 
-    val winner = if (currentGame.result == 1) info.player1 else info.player2
+    val winner = currentGame.result == 1
 
     Text(
-        text = "$winner " + stringResource(id = R.string.game_won),
+        text = if(!winner) stringResource(id = R.string.game_lost) else stringResource(id = R.string.game_won),
         style = MaterialTheme.typography.h4,
         color = MaterialTheme.colors.primaryVariant
     )

@@ -1,9 +1,6 @@
 package ipl.isel.daw.gomoku.utils.hypermedia
 
-import com.google.gson.annotations.SerializedName
-import okhttp3.MediaType
 import okhttp3.MediaType.Companion.toMediaType
-import java.net.URI
 
 /**
  * For details regarding the Siren media type, see <a href="https://github.com/kevinswiber/siren">Siren</a>
@@ -74,16 +71,16 @@ data class SirenLink(
  * Base class for admissible sub entities, namely, [EmbeddedLink] and [EmbeddedEntity].
  * Notice that this is a closed class hierarchy.
  */
-sealed class SubEntity
+/*sealed class SubEntity*/
 
-data class EmbeddedLink(
+/*data class EmbeddedLink(
     @SerializedName("class")
     val clazz: List<String>? = null,
     val rel: List<String>,
     val href: URI,
     val type: MediaType? = null,
     val title: String? = null
-) : SubEntity()
+) : SubEntity()*/
 
 /*data class EmbeddedEntity<T>(
     val rel: List<String>,

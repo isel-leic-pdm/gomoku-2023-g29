@@ -33,4 +33,5 @@
     <string name="traditional">Traditional</string>
     <string name="renju">Renju</string>
     <string name="mode">Gamemode: </string>
+    <string name="game_lost">You Lost…\n(you kinda suck)</string>
 </resources>

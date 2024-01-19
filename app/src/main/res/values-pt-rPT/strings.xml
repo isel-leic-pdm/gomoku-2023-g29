@@ -34,4 +34,5 @@
     <string name="traditional">Tradicional</string>
     <string name="renju">Renju</string>
     <string name="mode">Modo de jogo: </string>
+    <string name="game_lost">Perdeste…\n(és uma beca mau)</string>
 </resources>

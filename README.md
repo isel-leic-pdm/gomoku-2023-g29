@@ -25,7 +25,4 @@ It is a two-player game, and the players take turns to place a stone on the boar
 > [!IMPORTANT]
 > Once you press *`Play`* you can choose your gamemode(*`Traditional`* or *`Renju`*). If there's no one on the auto-queue the app will return you to the home screen but also add you to the *`Wait List`*. You can try again until someone also presses *`Play`*. If not, you'll stay in the menu and in the wait list forever. Totally intended feature by the way.
 
-> [!NOTE]
-> The WebApp wasn't included **yet** in the software packaging of this repository.
-
 

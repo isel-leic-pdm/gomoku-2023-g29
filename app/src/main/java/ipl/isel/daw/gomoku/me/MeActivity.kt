@@ -10,11 +10,11 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
-import ipl.isel.daw.gomoku.me.ui.MeScreenState
-import ipl.isel.daw.gomoku.me.ui.MeView
 import ipl.isel.daw.gomoku.DependenciesContainer
 import ipl.isel.daw.gomoku.me.model.MeViewModel
 import ipl.isel.daw.gomoku.me.model.RealMeService
+import ipl.isel.daw.gomoku.me.ui.MeScreenState
+import ipl.isel.daw.gomoku.me.ui.MeView
 import ipl.isel.daw.gomoku.utils.viewModelInit
 import okhttp3.OkHttpClient
 
@@ -52,7 +52,6 @@ class MeActivity : ComponentActivity() {
             }
         }
     }
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

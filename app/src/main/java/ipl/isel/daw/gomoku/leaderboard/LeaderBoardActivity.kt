@@ -8,10 +8,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import ipl.isel.daw.gomoku.DependenciesContainer
 import ipl.isel.daw.gomoku.leaderboard.model.LeaderboardViewModel
 import ipl.isel.daw.gomoku.leaderboard.ui.LeaderboardState
 import ipl.isel.daw.gomoku.leaderboard.ui.LeaderboardView
-import ipl.isel.daw.gomoku.DependenciesContainer
 import ipl.isel.daw.gomoku.utils.viewModelInit
 
 
@@ -46,7 +46,7 @@ class LeaderboardActivity : ComponentActivity() {
                     rankings,
                     error,
                 ),
-                onFindPlayer = {username -> viewModel.fetchPlayerInfo(username) },
+                onFindPlayer = { username -> viewModel.fetchPlayerInfo(username) },
                 onBackRequest = { finish() },
                 onErrorReset = {viewModel.resetError()},
             )

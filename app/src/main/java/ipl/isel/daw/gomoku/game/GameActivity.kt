@@ -64,7 +64,6 @@ class GameActivity : ComponentActivity() {
                 intent.getParcelableExtra(MATCH_INFO_EXTRA, MatchInfo::class.java)
             else
                 intent.getParcelableExtra(MATCH_INFO_EXTRA)
-
         checkNotNull(info)
     }
 
@@ -108,11 +107,11 @@ class GameActivity : ComponentActivity() {
                     viewModel.handleForfeit()
                     finish()
                 },
-                info = processedInfo,
+                info = processedInfo!!,
                 currentGame = currentGame,
                 playerBoard = board,
                 myTurn = { myTurn },
-                makeMove = { shots: Pair<Int,Int> -> viewModel.makeMove(shots) },
+                makeMove = { shots: Pair<Int, Int> -> viewModel.makeMove(shots) },
                 error = error,
             ) { viewModel.resetError() }
         }

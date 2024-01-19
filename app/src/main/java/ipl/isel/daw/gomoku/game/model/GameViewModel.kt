@@ -18,7 +18,6 @@ class GameViewModel(
     private val info: MatchInfo
 ) : ViewModel() {
 
-
     private val _currentGame = MutableStateFlow(StateGame(Loader.WAITING, "", "", null))
     val currentGame = _currentGame.asStateFlow()
 
@@ -38,7 +37,7 @@ class GameViewModel(
     fun refreshGame() {
         val result = viewModelScope.async(Dispatchers.IO) {
             try {
-                gameService.refreshedGameState(info.uuid)
+                gameService.refreshedGameState(_processedInfo.value.uuid)
             } catch (e: Exception) {
                 Log.v(TAG, e.toString())
                 val errorMessage = e.toString().split(": ").last()

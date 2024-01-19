@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        body {
+            font-family: 'Preahvihear', sans-serif;
+            border: #1a1a1a;
+            border-radius: 20px;
+            box-shadow: inset 0 0 60px #2c2c2c;
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+            background-color: #363636; 
+            color: #ffffff;
+            justify-content: center;
+        }
+
+        #container {
+            font-family: 'Preahvihear', sans-serif;
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #container > div {
+            justify-content: center;
+            border: #1a1a1a;
+            border-radius: 20px;
+            box-shadow: inset 0 0 60px #2c2c2c;
+            padding: 50px;
+            background-color: rgb(94, 94, 94);
+        }
+
+        #theme-toggle > button {
+            size : 50px;
+        }
+
+        button {
+            display: inline-block;
+            font-family: 'Preahvihear', sans-serif;
+            font-size: 16px;
+            text-align: center;
+            padding: 10px 10px;
+            border: none;
+            border-radius: 5px;
+            background-color: #555555;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            color: #fff;
+            background: #555555;
+            overflow: hidden;
+            position: relative;
+        }
+
+        button:hover {
+            background-color: rgb(189, 189, 189);
+            color: transparent;
+            border: 0px solid transparent;
+        }
+
+        button:hover:after {
+            content: attr(data-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgb(118, 106, 0), rgb(125, 117, 0), rgb(226, 215, 66), rgb(247, 239, 8), rgb(192, 169, 79), rgb(100, 91, 31), rgb(83, 72, 0));
+            background-size: 200%;
+            animation: rainbow 2s linear infinite;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        @keyframes rainbow {
+            0% { background-position: 0%; }
+            100% { background-position: -200%; }
+        }
+
+        button:active {
+            text-align: center;
+            background-color: #777777;
+        }
+
+        label {
+            color: #b6b6b6;
+            display: block;
+            margin-top: 10px;
+            margin-bottom: 0px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 20px;
+            margin-bottom: 5px;
+            box-sizing: border-box;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            color: #f8f8f8;
+            border-color: #555;
+            background-color: #444;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        
+        input:focus {
+            border-color: #4CAF50;
+        }
+
+        h1 {
+            font-family: 'Dancing Script', cursive;
+            font-size: 48px;
+            text-align: center;
+            color: #222222;
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 30px;
+            font-family: 'Dancing Script';
+            color: #dbdbdb;
+        }
+
+        h3, h4, h5, h6 {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            color: #333333;
+        }
+
+        footer {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            text-align: right;
+            background-color: transparent;
+            font-family: 'Arial', sans-serif;
+            font-size: 14px;
+            color: transparent;
+            width: 100%;
+            padding: 5px 0;
+        }
+
+        strong {
+            transition: color 0.3s ease;
+            background: linear-gradient(90deg, rgb(118, 106, 0), rgb(125, 117, 0), rgb(240, 231, 102), rgb(240, 236, 105), rgb(192, 169, 79), rgb(100, 91, 31), rgb(83, 72, 0));
+            background-size: 200%;
+            animation: rainbow 2s linear infinite;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        a {
+            font-family: 'Arial', sans-serif;
+            text-decoration: none;
+            transition: color 0.3s ease;
+            background: linear-gradient(90deg, rgb(118, 106, 0), rgb(125, 117, 0), rgb(240, 231, 102), rgb(240, 236, 105), rgb(192, 169, 79), rgb(100, 91, 31), rgb(83, 72, 0));
+            background-size: 200%;
+            animation: rainbow 2s linear infinite;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        a:hover {
+            color: #0056b3;
+        }
+
+        a:active {
+            color: #003680;
+        }
+
+
+        .dropdown-menu {
+            border: #1a1a1a;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px #ffffff;
+            background-color: rgb(94, 94, 94);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .dropdown-toggle {
+            border: #1a1a1a;
+            border-radius: 5px;
+            box-shadow: inset 0 0 5px #ffffff;
+            background-color: rgb(94, 94, 94);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .dropdown-toggle:hover {
+            text-align: center;
+            color: transparent;
+        }
+
+        .dropdown-toggle:hover:after {
+            content: attr(data-text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, rgb(118, 106, 0), rgb(125, 117, 0), rgb(226, 215, 66), rgb(247, 239, 8), rgb(192, 169, 79), rgb(100, 91, 31), rgb(83, 72, 0));
+            background-size: 200%;
+            animation: rainbow 2s linear infinite;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .dropdown-item {
+            padding: 20px;
+        }
+
+        fieldset {
+            background-color: #444;
+            border: 2px solid #555;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 600px;
+        }
+
+        body.light-theme {
+            box-shadow: inset 0 0 300px 40px #f9f9f9;
+            background-color: #e5deb6; 
+        }
+
+        body.light-theme h2,
+        body.light-theme label,
+        body.light-theme div > p {
+            color: #3a3a3a;
+        }
+
+        body.light-theme button,
+        body.light-theme fieldset,
+        body.light-theme .dropdown-menu {
+            color: #343434;
+            background-color: #e5deb6;
+            border: 2px solid #ffffff;
+        }
+
+        body.light-theme input {
+            color: #343434;
+            background-color: #ffffff;
+            border: 2px solid #ffffff;
+        }
+
+        #container.light-theme > div {
+            box-shadow: inset 0 0 2000px #ece096;
+            background-color: #ffffff;
+            color: #343434;
+        }
+
+        #theme-toggle {
+            display: grid;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border: none;
+            border-radius: 50%;
+            background-color: #323232;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        body.light-theme #theme-toggle {
+            background-color: #ece096; /* Dark background for light theme */
+        }
+        body.light-theme #theme-toggle:hover {
+            background-color: #323232;
+        }
+
+        #theme-toggle:hover {
+            background-color: #ece096;
+        }
+
+        #theme-toggle:active {
+            background-color: #aaaaaa;
+        }
+
+        #theme-toggle img {
+            width: 40px;
+            height: 40px;
+        }
+
+    </style>
+
+    <head>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Preahvihear&display=swap" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" />
+        <meta charset="UTF-8">
+        <title>Index</title>
+        <script src="main.js" type="module"></script>
+    </head>
+    <body>
+        <div id="container"></div> 
+    </body>
+    <footer>
+        <button id="theme-toggle" >
+            <img 
+            src="https://cdn.icon-icons.com/icons2/2248/PNG/512/theme_light_dark_icon_137104.png"
+            alt="Toggle Theme"
+            >
+        </button>
+    </footer>
+</html>

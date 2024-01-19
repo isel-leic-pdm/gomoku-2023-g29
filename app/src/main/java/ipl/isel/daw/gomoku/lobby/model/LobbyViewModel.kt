@@ -6,7 +6,9 @@ import androidx.lifecycle.viewModelScope
 import ipl.isel.daw.gomoku.TAG
 import ipl.isel.daw.gomoku.game.model.GameOutputModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -18,8 +20,13 @@ class LobbyViewModel(
     private val lobbyService: RealLobbyService
 ) : ViewModel() {
 
+    val isWaiting = "inQueue"
+
     private val _isLoading = MutableStateFlow(false)
     val isLoading = _isLoading.asStateFlow()
+
+    private val inQueue = MutableStateFlow(false)
+    val isInQueue = inQueue.asStateFlow()
 
     private val _type = MutableStateFlow(true)
     val type = _type.asStateFlow()
@@ -34,14 +41,23 @@ class LobbyViewModel(
         _type.value = _type.value.not()
     }
 
-    fun joinGame() =
-        viewModelScope.launch(Dispatchers.IO) {
-            _isLoading.value = true
+    fun joinGame() : Job {
+        _isLoading.value = true
+        return viewModelScope.launch(Dispatchers.IO) {
             try {
                 _game.value = async { lobbyService.joinOrStartMatch(_type.value) }.await()
-                if(_game.value == null)
-                    _error.value = "Error joining game, API probably isn't Online"
-                else
+                if (_game.value == null) {
+                    Log.v(
+                        TAG,
+                        "Error joining game, API probably isn't Online or Player is in queue"
+                    )
+                    inQueue.value = true
+                    while (_game.value == null) {
+                        _game.value = async { lobbyService.joinOrStartMatch(_type.value) }.await()
+                        delay(2000)
+                    }
+                    inQueue.value = false
+                } else
                     Log.v(TAG, "Game joined: ${_game.value}")
             } catch (e: Exception) {
                 Log.v(TAG, e.toString())
@@ -50,6 +66,7 @@ class LobbyViewModel(
             }
             _isLoading.value = false
         }
+    }
 
 
     fun resetError() {

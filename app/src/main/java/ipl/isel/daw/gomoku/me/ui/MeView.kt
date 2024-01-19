@@ -3,7 +3,6 @@ package ipl.isel.daw.gomoku.me.ui
 import android.annotation.SuppressLint
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -17,9 +16,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ipl.isel.daw.gomoku.R
 import ipl.isel.daw.gomoku.game.model.GameDTO
 import ipl.isel.daw.gomoku.leaderboard.model.PlayerInfo
-import ipl.isel.daw.gomoku.R
 import ipl.isel.daw.gomoku.ui.TopBar
 import ipl.isel.daw.gomoku.ui.theme.GomokuAndroidTheme
 import java.util.UUID
@@ -92,7 +91,7 @@ fun MeView(
                         )
                     }
 
-                    if (state.myGamesHistory != null) {
+                   /* if (state.myGamesHistory != null) {
                         Text(
                             text = stringResource(id = R.string.me_yourgamehistory),
                             style = MaterialTheme.typography.h4,
@@ -109,17 +108,17 @@ fun MeView(
                             }
                         }
                     } else {
-                        Text(
+                        *//*Text(
                             text = stringResource(id = R.string.me_yourgamehistory),
                             style = MaterialTheme.typography.h3,
                             color = MaterialTheme.colors.primaryVariant
-                        )
+                        )*//*
                         Text(
                             text = stringResource(id = R.string.utils_loading),
                             style = MaterialTheme.typography.h4,
                             color = MaterialTheme.colors.primaryVariant
                         )
-                    }
+                    }*/
                     if (state.error != null) {
                         Toast.makeText(LocalContext.current, state.error, Toast.LENGTH_LONG).show()
                         onErrorReset()

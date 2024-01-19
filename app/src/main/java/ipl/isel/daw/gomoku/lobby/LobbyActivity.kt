@@ -82,24 +82,28 @@ class LobbyActivity : ComponentActivity() {
             val error by viewModel.error.collectAsState()
             val traditional by viewModel.type.collectAsState()
             val game by viewModel.game.collectAsState()
+            val isInQueue by viewModel.isInQueue.collectAsState()
             LobbyView(
                 state = LobbyState(game?.id, traditional, error),
                 onChangeMode = { viewModel.chooseGameType() },
                 onStartOrJoinGame = {
-                    val job = viewModel.joinGame()
-                    while(!job.isCompleted || viewModel.isLoading.value || viewModel.game.value == null);
-                    val game2 = viewModel.game.value
-                    val info = MatchInfo(
-                        game2!!.id,
-                        game2.userId1,
-                        game2.userId2,
-                        whoAmI = if (game2.userId1 == repo.userInfoRepo.userInfo!!.userId)
-                            Turn.PLAYER1.name else Turn.PLAYER2.name
-                    )
-                    GameActivity.navigate(this, info)
-
+                    viewModel.joinGame()
+                    while(viewModel.isLoading.value);
+                    while(viewModel.isInQueue.value);
+                    if(viewModel.game.value!=null) {
+                        val g = viewModel.game.value
+                        val info = MatchInfo(
+                            g!!.id,
+                            g.userId1,
+                            g.userId2,
+                            whoAmI = if (g.userId1 == repo.userInfoRepo.userInfo!!.userId)
+                                Turn.PLAYER1.name else Turn.PLAYER2.name
+                        )
+                        GameActivity.navigate(this, info)
+                    }
                     viewModel.resetError()
                 },
+                onWaitQueue = { isInQueue },
                 onBackRequest = { finish() },
                 onErrorReset = { viewModel.resetError() },
             )
@@ -111,6 +115,7 @@ class LobbyActivity : ComponentActivity() {
             }
         }*/
     }
+
 }
 
 @Parcelize
